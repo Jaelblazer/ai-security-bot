@@ -254,9 +254,4 @@ async def show_help(ctx):
 
 # Run the bot
 if __name__ == "__main__":
-    print(f"DISCORD_TOKEN: {os.getenv('DISCORD_TOKEN')}")
-    print("Testing Hugging Face API:")
-    print(query_huggingface("What is the capital of France?"))
-    print("Testing OpenRouter Claude Sonnet:")
-    print(query_openrouter("What is the capital of France?"))
     bot.run(os.getenv('DISCORD_TOKEN')) 
