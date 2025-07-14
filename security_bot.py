@@ -14,7 +14,6 @@ import threading
 
 # Load environment variables
 load_dotenv()
-print("HUGGINGFACE_API_KEY from Python:", os.getenv("HUGGINGFACE_API_KEY"))
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -30,25 +29,17 @@ bot.remove_command('help')
 openai.api_key = os.getenv("OPENROUTER_API_KEY")
 openai.api_base = "https://openrouter.ai/api/v1"
 
-HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
-API_URL = "https://api-inference.huggingface.co/models/gpt2"
-
-def query_huggingface(prompt):
-    payload = {"inputs": prompt}
-    response = requests.post(API_URL, json=payload)
-    try:
-        return response.json()
-    except Exception:
-        print("Raw response:", response.text)
-        raise
-
 def query_openrouter(prompt):
     try:
         response = openai.ChatCompletion.create(
             model="qwen/qwen3-14b:free",
             messages=[{"role": "user", "content": prompt}]
         )
-        return response.choices[0].message.content
+        if isinstance(response, dict) and 'choices' in response and response['choices']:
+            return response['choices'][0]['message']['content']
+        else:
+            print("OpenRouter response missing 'choices':", response)
+            return None
     except Exception as e:
         print("OpenRouter error:", e)
         return None
@@ -78,8 +69,18 @@ class SecurityMonitor:
             }}
             """
             analysis_text = query_openrouter(prompt)
-            analysis = json.loads(analysis_text)
-            return analysis
+            if analysis_text is not None:
+                analysis = json.loads(analysis_text)
+                return analysis
+            else:
+                logger.error("OpenRouter did not return analysis text.")
+                return {
+                    "threat_level": "Unknown",
+                    "impact": "Unable to analyze",
+                    "recommendations": ["Review manually"],
+                    "affected_systems": ["Unknown"],
+                    "ai_confidence": 0.0
+                }
         except Exception as e:
             logger.error(f"Error analyzing threat: {e}")
             return {
@@ -120,7 +121,7 @@ class SecurityMonitor:
         """Send formatted alert to Discord channel"""
         try:
             channel = bot.get_channel(int(channel_id))
-            if channel:
+            if isinstance(channel, discord.TextChannel):
                 embed = discord.Embed(
                     title=f"🚨 Security Alert - {analysis['threat_level'].upper()}",
                     description=f"**Threat:** {threat_data['title']}",
@@ -254,4 +255,8 @@ async def show_help(ctx):
 
 # Run the bot
 if __name__ == "__main__":
-    bot.run(os.getenv('DISCORD_TOKEN')) 
+    token = os.getenv('DISCORD_TOKEN')
+    if not token:
+        print("ERROR: DISCORD_TOKEN environment variable is not set.")
+    else:
+        bot.run(token) 
