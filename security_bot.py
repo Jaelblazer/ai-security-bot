@@ -212,13 +212,16 @@ async def manual_scan(ctx):
 @bot.command(name='ask')
 async def ask_ai(ctx, *, question):
     """Ask the AI a security question."""
+    print(f"!ask command received: {question}")
     await ctx.send("🤖 Thinking...")
     response = query_openrouter(question)
+    print(f"OpenRouter response: {response}")
     if not response:
         await ctx.send("Sorry, I couldn't get an answer.")
         return
     # Split response into chunks of 4000 characters
     for chunk in [response[i:i+4000] for i in range(0, len(response), 4000)]:
+        print(f"Sending chunk: {chunk[:60]}...")  # Print first 60 chars for debug
         await ctx.send(chunk)
 
 @tasks.loop(minutes=30)  # Check every 30 minutes
