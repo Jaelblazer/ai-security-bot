@@ -29,10 +29,13 @@ bot.remove_command('help')
 openai.api_key = os.getenv("OPENROUTER_API_KEY")
 openai.api_base = "https://openrouter.ai/api/v1"
 
+# Set the default OpenRouter model to Qwen
+OPENROUTER_MODEL = "qwen/qwen3-14b:free"
+
 def query_openrouter(prompt):
     try:
         response = openai.ChatCompletion.create(
-            model="qwen/qwen3-14b:free",
+            model=OPENROUTER_MODEL,
             messages=[{"role": "user", "content": prompt}]
         )
         if isinstance(response, dict) and 'choices' in response and response['choices']:
