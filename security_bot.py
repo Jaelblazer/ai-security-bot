@@ -219,6 +219,9 @@ async def ask_ai(ctx, *, question):
     if not response:
         await ctx.send("Sorry, I couldn't get an answer.")
         return
+    if "rate limit" in response.lower() or "add 10 credits" in response.lower():
+        await ctx.send("⚠️ The AI has reached its daily usage limit. Please try again later or add credits to your OpenRouter/OpenAI account.")
+        return
     # Split response into chunks of 4000 characters
     for chunk in [response[i:i+4000] for i in range(0, len(response), 4000)]:
         print(f"Sending chunk: {chunk[:60]}...")  # Print first 60 chars for debug
