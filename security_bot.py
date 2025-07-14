@@ -214,7 +214,12 @@ async def ask_ai(ctx, *, question):
     """Ask the AI a security question."""
     await ctx.send("🤖 Thinking...")
     response = query_openrouter(question)
-    await ctx.send(response or "Sorry, I couldn't get an answer.")
+    if not response:
+        await ctx.send("Sorry, I couldn't get an answer.")
+        return
+    # Split response into chunks of 4000 characters
+    for chunk in [response[i:i+4000] for i in range(0, len(response), 4000)]:
+        await ctx.send(chunk)
 
 @tasks.loop(minutes=30)  # Check every 30 minutes
 async def monitor_security():
