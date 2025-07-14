@@ -1,1 +1,1 @@
-worker: pip uninstall -y openai && pip install openai==0.28 && python security_bot.py 
+worker: pip uninstall -y openai && pip install openai==0.28 && pip freeze && python security_bot.py 
