@@ -82,6 +82,7 @@ class SecurityMonitor:
                     "ai_confidence": 0.0
                 }
         except Exception as e:
+            print(f"analyze_threat: exception occurred: {e}")
             logger.error(f"Error analyzing threat: {e}")
             return {
                 "threat_level": "Unknown",
@@ -208,28 +209,32 @@ async def manual_scan(ctx):
     else:
         await ctx.send("✅ No new threats detected in manual scan.")
 
+@bot.command(name='ask')
+async def ask_ai(ctx, *, question):
+    """Ask the AI a security question."""
+    await ctx.send("🤖 Thinking...")
+    response = query_openrouter(question)
+    await ctx.send(response or "Sorry, I couldn't get an answer.")
+
 @tasks.loop(minutes=30)  # Check every 30 minutes
 async def monitor_security():
-    """Main security monitoring loop"""
+    print("monitor_security: loop started")
     logger.info("Running security monitoring check...")
-    
     try:
         threats = await security_monitor.fetch_threat_intelligence()
-        
         for threat in threats:
             # Check if this threat is new (simple check - in production, use database)
             if threat not in security_monitor.threat_database:
                 security_monitor.threat_database.append(threat)
-                
                 # Analyze threat with AI
                 analysis = await security_monitor.analyze_threat(threat)
-                
                 # Send alerts to all configured channels
                 for channel_id in security_monitor.alert_channels:
                     await security_monitor.send_alert(channel_id, threat, analysis)
                     await asyncio.sleep(1)  # Small delay between channels
-                    
+        print("monitor_security: loop completed")
     except Exception as e:
+        print(f"monitor_security: exception occurred: {e}")
         logger.error(f"Error in security monitoring: {e}")
 
 @bot.command(name='help')
