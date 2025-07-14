@@ -161,6 +161,7 @@ security_monitor = SecurityMonitor()
 
 @bot.event
 async def on_ready():
+    print("on_ready event triggered")
     logger.info(f'{bot.user} has connected to Discord!')
     monitor_security.start()
 
@@ -255,8 +256,11 @@ async def show_help(ctx):
 
 # Run the bot
 if __name__ == "__main__":
+    print("Starting main block...")
     token = os.getenv('DISCORD_TOKEN')
+    print(f"Token is: {token}")
     if not token:
         print("ERROR: DISCORD_TOKEN environment variable is not set.")
     else:
+        print("Running bot...")
         bot.run(token) 
