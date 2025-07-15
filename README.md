@@ -100,8 +100,7 @@ Pull requests and issues are welcome! Please open an issue to discuss your ideas
 ---
 
 ## 📬 Contact
-- **Author:** [Your Name or Team]
-- **Discord:** [Your Discord Contact]
-- **Email:** [your@email.com]
+- **Author:** Jael
+- **Email:** atienojael869@gmail.com
 
 --- 
