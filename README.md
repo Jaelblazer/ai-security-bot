@@ -1,6 +1,7 @@
 # AI Security Monitor Bot
 
-A Discord bot that leverages AI to monitor, analyze, and respond to security-related events and conversations. Designed for security teams, communities, and organizations to enhance their security posture with real-time insights and automation.
+## About
+AI Security Monitor Bot is an intelligent Discord bot designed to help security teams, IT professionals, and online communities monitor, analyze, and respond to security-related events in real time. Leveraging the power of AI, it provides automated threat detection, insightful analysis, and customizable alerts to enhance your server's security posture. The project aims to make advanced security monitoring accessible and easy to deploy for everyone, regardless of technical background.
 
 ---
 
