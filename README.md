@@ -104,9 +104,4 @@ Pull requests and issues are welcome! Please open an issue to discuss your ideas
 - **Discord:** [Your Discord Contact]
 - **Email:** [your@email.com]
 
----
-
-**Monetization Goal:**
-- Target: $40/day = $1,200/month
-- 24-60 Pro users ($20/month) or 6-12 Enterprise clients ($50/month)
-- Focus on getting your first 5 paying clients! 
+--- 
